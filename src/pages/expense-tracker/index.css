@@ -27,7 +27,7 @@
 
 .expense-header h1 {
   font-size: 1.6rem;
-  font-weight: bold;
+  font-weight: 100;
 }
 
 .profile-box {
@@ -44,17 +44,19 @@
 }
 
 .signout-btn {
-  padding: 6px 12px;
+  padding: 10px 16px;
   background: #e63946;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   color: white;
   font-size: 0.9rem;
+  transition: transform 0.18s ease-in-out;
 }
 
 .signout-btn:hover {
-  background: #d62839;
+  transform: scale(1.1);
+  transform: translateY(-3px);
 }
 
 /* Balance Section */
@@ -90,12 +92,10 @@
 
 .income-box {
   background: rgba(6, 214, 160, 0.1);
-  border: 1px solid #06d6a0;
 }
 
 .expense-box {
   background: rgba(239, 71, 111, 0.1);
-  border: 1px solid #ef476f;
 }
 
 /* Form */
@@ -119,6 +119,10 @@
 }
 
 .radio-group {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  margin-top: 20px;
   display: flex;
   gap: 20px;
   font-size: 0.95rem;
@@ -133,7 +137,6 @@
   background: #4f46e5;
   border: none;
   border-radius: 10px;
-  font-weight: bold;
   cursor: pointer;
   color: white;
   font-size: 1rem;
@@ -229,3 +232,73 @@
   color: #00c853; /* green */
 }
 
+@media (max-width: 768px) {
+  .expense-container {
+    padding: 20px;
+  }
+
+  .expense-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .balance-section h2 {
+    font-size: 1.6rem;
+  }
+
+  .totals {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .total-box {
+    min-width: 100%;
+    text-align: center;
+  }
+
+  .transaction-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .amount {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .expense-container {
+    padding: 15px;
+  }
+
+  .expense-header h1 {
+    font-size: 1.1rem;
+  }
+
+  .profile-box img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .signout-btn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+
+  .balance-section h2 {
+    font-size: 1.3rem;
+  }
+
+  .transactions-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .transaction-item h4 {
+    font-size: 0.95rem;
+  }
+
+  .amount {
+    font-size: 0.95rem;
+  }
+}

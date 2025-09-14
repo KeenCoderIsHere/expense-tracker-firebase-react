@@ -7,6 +7,9 @@ import { auth } from "../../config/firebase-config"
 import { useNavigate } from "react-router-dom"
 import { FiArrowUpCircle, FiArrowDownCircle } from "react-icons/fi"
 import "./index.css"
+import { FiArrowUpRight } from 'react-icons/fi'
+import { FiLogOut } from "react-icons/fi";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 
 export const ExpenseTracker = () => {
   let navigate = useNavigate()
@@ -39,12 +42,13 @@ export const ExpenseTracker = () => {
     <div className="expense-container">
       <div className="expense-card">
         <div className="expense-header">
-          <h1>{name}’s Expense Tracker</h1>
+          <h1>{name}'s Expense Tracker</h1>
           {profilePhoto && (
             <div className="profile-box">
               <img src={profilePhoto} alt="Profile" />
               <button onClick={signUserOut} className="signout-btn">
                 Sign Out
+                <FiArrowUpRight />
               </button>
             </div>
           )}
@@ -114,6 +118,7 @@ export const ExpenseTracker = () => {
 
           <button type="submit" className="submit-btn">
             Add Transaction
+            <AiOutlinePlusCircle style={{marginLeft: "5px"}}/>
           </button>
         </form>
       </div>
@@ -129,7 +134,6 @@ export const ExpenseTracker = () => {
               <li key={index} className="transaction-item">
                 <div>
                   <h4>{description}</h4>
-                  <p className="type-label">{transactionType === "expense" ? <FiArrowDownCircle color="red" size={50}/> : <FiArrowUpCircle color="green" size={50}/>}</p>
                 </div>
                 <p
                   className={

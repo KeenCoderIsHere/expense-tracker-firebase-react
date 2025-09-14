@@ -2,7 +2,8 @@ import { auth, provider } from "../../config/firebase-config"
 import { signInWithPopup } from 'firebase/auth'
 import { useNavigate, Navigate } from 'react-router-dom'
 import { useGetUserInfo } from "../../hooks/useGetUserInfo"
-import { useEffect } from "react"
+import { FiArrowUpRight } from 'react-icons/fi'
+import './index.css'
 export const Auth = () => {
   let navigate = useNavigate()
   let { isAuth } = useGetUserInfo()
@@ -22,32 +23,16 @@ export const Auth = () => {
     
   return (
     <div 
-      style={{
-        display:"flex",
-        flexDirection:"column",
-        alignItems:"center",
-        justifyContent:"center",
-        height:"100vh",
-        fontFamily:"Arial",
-        backgroundColor:"#f5f5f5"
-      }}
+    className="sign-in-container"
     >
-      <p style={{fontSize:"18px",marginBottom:"20px"}}>Sign In With Google to Continue</p>
+      <p
+      className="sign-in-p" >Sign In With Google to Continue</p>
       <button 
         onClick={signInWithGoogle}
-        style={{
-          padding:"10px 20px",
-          backgroundColor:"#4285F4",
-          color:"white",
-          border:"none",
-          borderRadius:"5px",
-          cursor:"pointer",
-          fontSize:"16px",
-          fontWeight:"bold",
-          boxShadow:"0 2px 6px rgba(0,0,0,0.2)"
-        }}
+        className="sign-in-button"
       >
         Sign In With Google
+        <FiArrowUpRight />
       </button>
     </div>
   )
