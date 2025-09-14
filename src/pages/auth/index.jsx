@@ -19,6 +19,7 @@ export const Auth = () => {
   }
   if(isAuth){
     return <Navigate to="/expense-tracker" /> }
+    
   return (
     <div 
       style={{

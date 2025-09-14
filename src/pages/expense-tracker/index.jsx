@@ -1,165 +1,150 @@
-import { useState } from 'react'
-import { useAddTransaction } from '../../hooks/useAddTransaction'
-import { useGetTransactions } from '../../hooks/useGetTransactions'
-import { useGetUserInfo } from '../../hooks/useGetUserInfo'
-import { signOut } from 'firebase/auth'
-import { auth } from '../../config/firebase-config'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react"
+import { useAddTransaction } from "../../hooks/useAddTransaction"
+import { useGetTransactions } from "../../hooks/useGetTransactions"
+import { useGetUserInfo } from "../../hooks/useGetUserInfo"
+import { signOut } from "firebase/auth"
+import { auth } from "../../config/firebase-config"
+import { useNavigate } from "react-router-dom"
+import { FiArrowUpCircle, FiArrowDownCircle } from "react-icons/fi"
+import "./index.css"
+
 export const ExpenseTracker = () => {
   let navigate = useNavigate()
   const { addTransaction } = useAddTransaction()
   const { transactions, transactionTotals } = useGetTransactions()
-  const [ description,setDescription] = useState("")
-  const [ transactionAmount,setTransactionAmount] = useState(0)
-  const [ transactionType,setTransactionType] = useState("expense")
+  const [description, setDescription] = useState("")
+  const [transactionAmount, setTransactionAmount] = useState(0)
+  const [transactionType, setTransactionType] = useState("expense")
   const { name, profilePhoto } = useGetUserInfo()
+
   const onSubmit = (e) => {
     e.preventDefault()
-    addTransaction({
-      description,
-      transactionAmount,
-      transactionType,
-    })
+    addTransaction({ description, transactionAmount, transactionType })
     setDescription("")
     setTransactionAmount(0)
     setTransactionType("expense")
   }
+
   const signUserOut = async () => {
-    try{
+    try {
       await signOut(auth)
       localStorage.clear()
       navigate("/")
+    } catch (err) {
+      console.error(err)
     }
-    catch(err){console.error(err)}
   }
+
   return (
-    <>
-    <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"20px",fontFamily:"Arial"}}>
-      <div style={{width:"100%",maxWidth:"500px",border:"1px solid #ccc",borderRadius:"10px",padding:"20px",boxShadow:"0 2px 6px rgba(0,0,0,0.1)"}}>
-        <h1 style={{textAlign:"center",marginBottom:"20px"}}>{name}'s Expense Tracker</h1>
-
-        <div style={{marginBottom:"20px"}}>
-          <h3 style={{margin:"0"}}>Your Balance</h3>
-          {
-            transactionTotals.balance >= 0 ? (<h2 style={{margin:"5px 0"}}>${ transactionTotals.balance }</h2>) : (<h2 style={{margin:"5px 0"}}>-${ Math.abs(transactionTotals.balance) }</h2>)
-          }
-          
-
-          <div style={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
-            <div style={{flex:1,textAlign:"center",padding:"10px",borderRight:"1px solid #ddd"}}>
-              <h4 style={{margin:"0"}}>Income</h4>
-              <p style={{margin:"5px 0"}}>${ transactionTotals.income }</p>
+    <div className="expense-container">
+      <div className="expense-card">
+        <div className="expense-header">
+          <h1>{name}’s Expense Tracker</h1>
+          {profilePhoto && (
+            <div className="profile-box">
+              <img src={profilePhoto} alt="Profile" />
+              <button onClick={signUserOut} className="signout-btn">
+                Sign Out
+              </button>
             </div>
-            <div style={{flex:1,textAlign:"center",padding:"10px"}}>
-              <h4 style={{margin:"0"}}>Expenses</h4>
-              <p style={{margin:"5px 0"}}>${ transactionTotals.expense }</p>
+          )}
+        </div>
+        {/* Balance Section */}
+        <div className="balance-section">
+          <h3>Your Balance</h3>
+          <h2
+            className={
+              transactionTotals.balance >= 0 ? "positive" : "negative"
+            }
+          >
+            {transactionTotals.balance >= 0
+              ? `$${transactionTotals.balance}`
+              : `-$${Math.abs(transactionTotals.balance)}`}
+          </h2>
+
+          <div className="totals">
+            <div className="total-box income-box">
+              <h4>Income</h4>
+              <p>${transactionTotals.income}</p>
+            </div>
+            <div className="total-box expense-box">
+              <h4>Expenses</h4>
+              <p>${transactionTotals.expense}</p>
             </div>
           </div>
         </div>
 
-        <form onSubmit={onSubmit} style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-          <input 
-            type="text" 
-            placeholder="Description" 
-            required 
-            onChange={e => setDescription(e.target.value)}
-            style={{padding:"8px",borderRadius:"5px",border:"1px solid #ccc"}}
+        {/* Form Section */}
+        <form onSubmit={onSubmit} className="expense-form">
+          <input
+            type="text"
+            placeholder="Description"
+            required
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
-          <input 
-            type="number" 
-            placeholder="Amount" 
-            required 
-            onChange={e => setTransactionAmount(Number(e.target.value))}
-            style={{padding:"8px",borderRadius:"5px",border:"1px solid #ccc"}}
+          <input
+            type="number"
+            placeholder="Amount"
+            required
+            value={transactionAmount}
+            onChange={(e) => setTransactionAmount(Number(e.target.value))}
           />
 
-          <div style={{display:"flex",gap:"10px",alignItems:"center"}}>
-            <input 
-              type="radio" 
-              id="expense" 
-              value="expense" 
-              onChange={e => setTransactionType(Number(e.target.value))} 
-              checked={transactionType === "expense"}
-            />
-            <label htmlFor="expense">Expense</label>
-            <input 
-              type="radio" 
-              id="income" 
-              value="income" 
-              onChange={e => setTransactionType(e.target.value)} 
-              checked={transactionType === "income"}
-            />
-            <label htmlFor="income">Income</label>
+          <div className="radio-group">
+            <label>
+              <input
+                type="radio"
+                value="expense"
+                checked={transactionType === "expense"}
+                onChange={(e) => setTransactionType(e.target.value)}
+              />
+              Expense
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="income"
+                checked={transactionType === "income"}
+                onChange={(e) => setTransactionType(e.target.value)}
+              />
+              Income
+            </label>
           </div>
 
-          <button 
-            type="submit"
-            style={{padding:"10px",backgroundColor:"#007bff",color:"white",border:"none",borderRadius:"5px",cursor:"pointer"}}
-          >
+          <button type="submit" className="submit-btn">
             Add Transaction
-            
           </button>
         </form>
       </div>
-    </div>{profilePhoto && (
-  <div 
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: "20px"
-    }}
-  >
-    <img 
-      src={profilePhoto} 
-      alt="Profile" 
-      style={{
-        width: "100px",
-        height: "100px",
-        borderRadius: "50%",
-        objectFit: "cover",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.2)"
-      }} 
-    />
-    <button 
-  onClick={signUserOut}
-  style={{
-    backgroundColor: "#e74c3c",
-    color: "white",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontSize: "16px",
-    marginTop: "15px",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.2)"
-  }}
->
-  Sign Out
-</button>
 
-  </div>
-)}
-
-    <div style={{width:"100%",maxWidth:"500px",margin:"20px auto",padding:"20px",border:"1px solid #ccc",borderRadius:"10px",boxShadow:"0 2px 6px rgba(0,0,0,0.1)"}}>
-      <h3 style={{textAlign:"center"}}>Transactions</h3>
-      <ul style={{listStyle:"none",padding:"0"}}>
-        {transactions.map((transaction, index) => {
-          const {description, transactionAmount, transactionType} = transaction
-          return (
-            <li key={index} style={{padding:"10px",borderBottom:"1px solid #ddd"}}>
-              <h4 style={{margin:"0 0 5px 0"}}>{description}</h4>
-              <p style={{margin:"0"}}>
-                ${transactionAmount}  
-                <label style={{marginLeft:"10px",color: transactionType === "expense" ? "red" : "green"}}>
-                  {transactionType}
-                </label>
-              </p>
-            </li>
-          )
-        })}
-      </ul>
+      {/* Transactions List */}
+      <div className="transactions-card">
+        <h3>Transactions</h3>
+        <ul>
+          {transactions.map((transaction, index) => {
+            const { description, transactionAmount, transactionType } =
+              transaction
+            return (
+              <li key={index} className="transaction-item">
+                <div>
+                  <h4>{description}</h4>
+                  <p className="type-label">{transactionType === "expense" ? <FiArrowDownCircle color="red" size={50}/> : <FiArrowUpCircle color="green" size={50}/>}</p>
+                </div>
+                <p
+                  className={
+                    transactionType === "expense"
+                      ? "amount expense-amount"
+                      : "amount income-amount"
+                  }
+                >
+                  {transactionType === "expense" ? "-" : "+"}${transactionAmount}
+                </p>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
     </div>
-    </>
   )
 }
